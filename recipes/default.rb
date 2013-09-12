@@ -27,8 +27,9 @@
 
 include_recipe 'dreadnot::install'
 
-node['dreadnot']['instances'].each do |instance_name, instance_local_settings|
+node['dreadnot']['instances'].each do |instance_name, config|
   dreadnot_instance instance_name do
-    local_settings instance_local_settings
+    git_repository config['git_repository']
+    git_revision config['git_revision']
   end
 end

@@ -36,6 +36,20 @@ user node['dreadnot']['user'] do
   shell node['dreadnot']['shell']
 end
 
+template "#{node['dreadnot']['home']}/.bashrc" do
+  source 'dotbashrc.sh.erb'
+  owner node['dreadnot']['user']
+  group node['dreadnot']['group']
+  mode 0640
+end
+
+template "#{node['dreadnot']['home']}/.bash_profile" do
+  source 'dotbash_profile.sh.erb'
+  owner node['dreadnot']['user']
+  group node['dreadnot']['group']
+  mode 0640
+end
+
 if node['dreadnot']['install_nodejs'] && node['platform_family'] != 'smartos'
   include_recipe 'nodejs'
 elsif node['platform_family'] == 'smartos'
@@ -54,6 +68,17 @@ elsif node['platform_family'] == 'smartos'
 end
 
 bash 'install dreadnot' do
-  code 'npm install -g dreadnot'
-  not_if 'which dreadnot'
+  code 'npm install dreadnot'
+  cwd node['dreadnot']['home']
+  user node['dreadnot']['user']
+  environment 'HOME' => node['dreadnot']['home']
+  not_if do
+    ::File.exists?("#{node['dreadnot']['home']}/node_modules/.bin/dreadnot")
+  end
+end
+
+directory node['dreadnot']['instance_prefix'] do
+  owner node['dreadnot']['user']
+  group node['dreadnot']['group']
+  mode 0750
 end
