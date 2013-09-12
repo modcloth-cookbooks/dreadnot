@@ -1,7 +1,9 @@
 # encoding: utf-8
 
 case node['platform_family']
-when 'debian', 'smartos'
+when 'debian'
+  default['nodejs']['install_method'] = 'package'
+when 'smartos'
   default['nodejs']['install_method'] = 'package'
 else
   default['nodejs']['install_method'] = 'source'

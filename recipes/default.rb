@@ -35,3 +35,5 @@ user node['dreadnot']['user'] do
   home node['dreadnot']['home']
   shell node['dreadnot']['shell']
 end
+
+include_recipe 'nodejs'
