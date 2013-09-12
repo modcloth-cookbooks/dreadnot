@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 # Cookbook Name:: dreadnot
-# Recipe:: default
+# Recipe:: install
 #
 # Copyright 2013, ModCloth, Inc.
 #
@@ -25,4 +25,35 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-include_recipe 'dreadnot::install'
+group node['dreadnot']['group'] do
+  gid node['dreadnot']['gid']
+end
+
+user node['dreadnot']['user'] do
+  gid node['dreadnot']['group']
+  supports manage_home: true
+  home node['dreadnot']['home']
+  shell node['dreadnot']['shell']
+end
+
+if node['dreadnot']['install_nodejs'] && node['platform_family'] != 'smartos'
+  include_recipe 'nodejs'
+elsif node['platform_family'] == 'smartos'
+  package 'nodejs 0.6.21' do
+    package_name 'nodejs'
+    version '0.6.21'
+    action :nothing
+  end
+
+  package 'nodejs 0.10.4' do
+    package_name 'nodejs'
+    version '0.10.4'
+    action :remove
+    notifies :install, 'package[nodejs 0.6.21]'
+  end
+end
+
+bash 'install dreadnot' do
+  code 'npm install -g dreadnot'
+  not_if 'which dreadnot'
+end

@@ -1,12 +1,13 @@
 # encoding: utf-8
 
+default['dreadnot']['install_nodejs'] = true
+
+default['nodejs']['version'] = '0.6.21'
+default['nodejs']['install_method'] = 'source'
+
 case node['platform_family']
-when 'debian'
-  default['nodejs']['install_method'] = 'package'
 when 'smartos'
-  default['nodejs']['install_method'] = 'package'
-else
-  default['nodejs']['install_method'] = 'source'
+  default['nodejs']['install_nodejs'] = false
 end
 
 default['dreadnot']['user'] = 'dreadnot'
