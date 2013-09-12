@@ -24,3 +24,14 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+
+group node['dreadnot']['group'] do
+  gid node['dreadnot']['gid']
+end
+
+user node['dreadnot']['user'] do
+  gid node['dreadnot']['group']
+  supports manage_home: true
+  home node['dreadnot']['home']
+  shell node['dreadnot']['shell']
+end
