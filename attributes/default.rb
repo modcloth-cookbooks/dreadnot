@@ -15,3 +15,8 @@ default['dreadnot']['group'] = 'dreadnot'
 default['dreadnot']['gid'] = 849
 default['dreadnot']['home'] = '/opt/dreadnot'
 default['dreadnot']['shell'] = '/bin/bash'
+default['dreadnot']['instance_prefix'] = '/opt/dreadnot/instances'
+default['dreadnot']['instance_template_file'] = 'local_settings.js.erb'
+default['dreadnot']['instance_template_cookbook'] = 'dreadnot'
+
+default['dreadnot']['instances'] = {}
