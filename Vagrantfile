@@ -1,5 +1,22 @@
 # encoding: utf-8
 
+$ubuntu_inline_script = <<EOF
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y -qq
+apt-get install -y -qq git build-essential
+
+if [ ! -d /tmp/example-app/.git ] ; then
+  pushd /tmp
+  rsync -avz /vagrant/test/integration/example-app .
+  pushd ./example-app
+  git init .
+  git add .
+  git config user.name Vagrant
+  git config user.email vagrant@example.com
+  git commit -m 'Initial commit'
+fi
+EOF
+
 Vagrant.configure('2') do |config|
   config.vm.hostname = 'dreadnot-berkshelf'
   config.vm.box = 'canonical-ubuntu-12.04'
@@ -12,9 +29,19 @@ Vagrant.configure('2') do |config|
   config.berkshelf.enabled = true
   config.omnibus.chef_version = :latest
 
+  config.vm.provision :shell, inline: $ubuntu_inline_script
   config.vm.provision :chef_solo do |chef|
     chef.log_level = ENV['DEBUG'] ? :debug : :info
-    chef.json = {}
+    chef.json = {
+      'dreadnot' => {
+        'instances' => {
+          'example-app' => {
+            'git_repository' => '/tmp/example-app',
+            'git_revision' => 'master'
+          }
+        }
+      }
+    }
     chef.run_list = [
       'recipe[dreadnot::default]'
     ]
