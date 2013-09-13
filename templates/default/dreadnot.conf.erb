@@ -1,4 +1,4 @@
-# encoding: utf-8
+# Dropped off by Chef for <%= node.name %>
 #
 # Copyright 2013, ModCloth, Inc.
 #
@@ -21,19 +21,15 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+description "dreadnot server instance"
 
-name             'dreadnot'
-maintainer       'ModCloth, Inc.'
-maintainer_email 'github+dreadnot-cookbook@modcloth.com'
-license          'MIT'
-description      'Installs/Configures dreadnot'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.0'
+setuid <%= node['dreadnot']['user'] %>
+umask 022
+chdir <%= @cwd %>
 
-%w(smartos ubuntu).each do |platform|
-  supports platform
-end
+respawn
+respawn limit 5 10
 
-%w(nodejs smf).each do |cookbook_name|
-  depends cookbook_name
-end
+env PATH=<%= node['dreadnot']['home'] %>/node_modules/.bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+
+exec dreadnot -p <%= @port %>

@@ -19,5 +19,6 @@ default['dreadnot']['shell'] = '/bin/bash'
 default['dreadnot']['instance_prefix'] = '/opt/dreadnot/instances'
 default['dreadnot']['instance_template_file'] = 'local_settings.js.erb'
 default['dreadnot']['instance_template_cookbook'] = 'dreadnot'
-
 default['dreadnot']['instances'] = {}
+default['dreadnot']['upstart_template_file'] = 'dreadnot.conf.erb'
+default['dreadnot']['upstart_template_cookbook'] = 'dreadnot'

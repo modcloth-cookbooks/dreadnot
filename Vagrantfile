@@ -15,6 +15,8 @@ if [ ! -d /tmp/example-app/.git ] ; then
   git config user.email vagrant@example.com
   git commit -m 'Initial commit'
 fi
+
+chown -R dreadnot:dreadnot /tmp/example-app
 EOF
 
 Vagrant.configure('2') do |config|
